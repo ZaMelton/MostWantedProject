@@ -40,7 +40,6 @@ function mainMenu(person, people){
       // TODO: get person's family
       break;
     case "descendants":
-      //seeDescendants(people, person);
       displayPeople(seeDescendants(people, person));
       break;
     case "restart":
@@ -115,16 +114,19 @@ function searchByTrait(people, peopleWithTraits = []){
 //   });
 //   displayPeople(allDescendants);
 // }
-function seeDescendants(people, person){
-  let descendants = people.filter(function(el){
+
+function seeDescendants(people, person, allChildren = []){
+  var allDescendants = allChildren;
+  var descendants = people.filter(function(el){
     if(el.parents[0] == person.id || el.parents[1] == person.id){
-      return el;
+      allDescendants.push(el);
+      return true;
     }
   });
-  descendants.push(descendants.filter(function(el){
-    return seeDescendants(people, el);
-  }));
-  return descendants;
+  for(let i = 0; i < descendants.length; i++){
+    seeDescendants(people,descendants[i], allDescendants);
+  }
+  return allDescendants;
 }
 
 // alerts a list of people
