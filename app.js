@@ -40,7 +40,8 @@ function mainMenu(person, people){
       // TODO: get person's family
       break;
     case "descendants":
-      // TODO: get person's descendants
+      //seeDescendants(people, person);
+      displayPeople(seeDescendants(people, person));
       break;
     case "restart":
       app(people); // restart
@@ -83,19 +84,47 @@ function searchByTrait(people, peopleWithTraits = []){
     });
   }
   var multiple = promptFor("Would you like to search for more traits?", yesNo).toLowerCase();
-  switch(multiple){
-    case "no":
-      displayPeople(filteredPeopleByTrait);
-      searchByName(people);
-      break;
-    case "yes":
-      searchByTrait(people, filteredPeopleByTrait);
-      break;
-    default:
-      alert("Invalid input. Please try again!");
-      app(people); // restart app
-      break;
+  var goodInput = false;
+  while(!goodInput){
+    switch(multiple){
+      case "no":
+        displayPeople(filteredPeopleByTrait);
+        searchByName(people);
+        goodInput = true;
+        break;
+      case "yes":
+        searchByTrait(people, filteredPeopleByTrait);
+        goodInput = true;
+        break;
+      default:
+        alert("Invalid input. Please try again!");
+        multiple = promptFor("Would you like to search for more traits?", yesNo).toLowerCase();
+        break;
+    }
   }
+}
+
+// function seeDescendants(people, person){
+//   let descendants = people.filter(function(el){
+//     if(el.parents[0] == person.id || el.parents[1] == person.id){
+//       return el;
+//     }
+//   });
+//   let allDescendants = descendants.filter(function(el){
+//     return seeDescendants(people, el);
+//   });
+//   displayPeople(allDescendants);
+// }
+function seeDescendants(people, person){
+  let descendants = people.filter(function(el){
+    if(el.parents[0] == person.id || el.parents[1] == person.id){
+      return el;
+    }
+  });
+  descendants.push(descendants.filter(function(el){
+    return seeDescendants(people, el);
+  }));
+  return descendants;
 }
 
 // alerts a list of people
