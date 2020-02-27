@@ -53,11 +53,11 @@ function mainMenu(person, people){
 }
 
 function searchByName(people){
-  var firstName = promptFor("What is the person's first name?", chars);
-  var lastName = promptFor("What is the person's last name?", chars);
+  var firstName = promptFor("What is the person's first name?", chars).toLowerCase();
+  var lastName = promptFor("What is the person's last name?", chars).toLowerCase();
 
   let filteredPeople = people.filter(function(el) {
-    if(el.firstName === firstName && el.lastName === lastName) {
+    if(el.firstName.toLowerCase() === firstName && el.lastName.toLowerCase() === lastName) {
       return el;
     }
   });
@@ -66,7 +66,7 @@ function searchByName(people){
 }
 
 function searchByTrait(people, peopleWithTraits = []){
-  var trait = promptFor("What trait would you like to search for?", chars);
+  var trait = promptFor("What trait would you like to search for?", traits);
   var traitValue = promptFor("What is the value of the desired trait? (ex: if you entered weight for trait, this value could be 120)", chars);
   if(peopleWithTraits.length == 0){
     var filteredPeopleByTrait = people.filter(function(el) {
@@ -83,18 +83,23 @@ function searchByTrait(people, peopleWithTraits = []){
     });
   }
   var multiple = promptFor("Would you like to search for more traits?", yesNo).toLowerCase();
-  switch(multiple){
-    case "no":
-      displayPeople(filteredPeopleByTrait);
-      searchByName(people);
-      break;
-    case "yes":
-      searchByTrait(people, filteredPeopleByTrait);
-      break;
-    default:
-      alert("Invalid input. Please try again!");
-      app(people); // restart app
-      break;
+  var goodInput = false;
+  while(!goodInput){
+    switch(multiple){
+      case "no":
+        displayPeople(filteredPeopleByTrait);
+        searchByName(people);
+        goodInput = true;
+        break;
+      case "yes":
+        searchByTrait(people, filteredPeopleByTrait);
+        goodInput = true;
+        break;
+      default:
+        alert("Invalid input. Please try again!");
+        multiple = promptFor("Would you like to search for more traits?", yesNo).toLowerCase();
+        break;
+    }
   }
 }
 
@@ -135,4 +140,8 @@ function yesNo(input){
 // helper function to pass in as default promptFor validation
 function chars(input){
   return true; // default validation only
+}
+
+function traits(input){
+  return input == "firstName" || input == "lastName" || input == "gender" || input == "dob" || input == "height" || input == "weight" || input == "eyeColor" || input == "occupation"
 }
