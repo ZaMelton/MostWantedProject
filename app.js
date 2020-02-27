@@ -104,15 +104,17 @@ function searchByTrait(people, peopleWithTraits = []){
 }
 
 // function seeDescendants(people, person){
-//   let descendants = people.filter(function(el){
+//   let descendants = [];
+//   let children = people.filter(function(el){
 //     if(el.parents[0] == person.id || el.parents[1] == person.id){
-//       return el;
+//       return true;
 //     }
 //   });
-//   let allDescendants = descendants.filter(function(el){
-//     return seeDescendants(people, el);
-//   });
-//   displayPeople(allDescendants);
+//   descendants = descendants.concat(children);
+//   for(let i = 0; i< children.length; i++){
+//     descendants = descendants.concat(seeDescendants(people, children[i]));
+//   }
+//   return descendants;
 // }
 
 function seeDescendants(people, person, allChildren = []){
