@@ -65,17 +65,37 @@ function searchByName(people){
   mainMenu(filteredPeople[0], people);
 }
 
-function searchByTrait(people){
+function searchByTrait(people, peopleWithTraits = []){
   var trait = promptFor("What trait would you like to search for?", chars);
   var traitValue = promptFor("What is the value of the desired trait? (ex: if you entered weight for trait, this value could be 120)", chars);
-  let filteredPeopleByTrait = people.filter(function(el) {
-    if(el[trait] == traitValue){
-      return el;
-    }
-  });
-
-  displayPeople(filteredPeopleByTrait);
-  searchByName(people);
+  if(peopleWithTraits.length == 0){
+    var filteredPeopleByTrait = people.filter(function(el) {
+      if(el[trait] == traitValue){
+        return el;
+      }
+    });
+  }
+  else{
+    var filteredPeopleByTrait = peopleWithTraits.filter(function(el) {
+      if(el[trait] == traitValue){
+        return el;
+      }
+    });
+  }
+  var multiple = promptFor("Would you like to search for more traits?", yesNo).toLowerCase();
+  switch(multiple){
+    case "no":
+      displayPeople(filteredPeopleByTrait);
+      searchByName(people);
+      break;
+    case "yes":
+      searchByTrait(people, filteredPeopleByTrait);
+      break;
+    default:
+      alert("Invalid input. Please try again!");
+      app(people); // restart app
+      break;
+  }
 }
 
 // alerts a list of people
@@ -92,8 +112,8 @@ function displayPerson(person){
   personInfo += "Last Name: " + person.lastName + "\n";
   personInfo += "Gender: " + person.gender + "\n";
   personInfo += "Date of Birth: " + person.dob + "\n";
-  personInfo += "Height: " + person.height + " pounds\n";
-  personInfo += "Weight: " + person.weight + " inches\n";
+  personInfo += "Height: " + person.height + " inches\n";
+  personInfo += "Weight: " + person.weight + " pounds\n";
   personInfo += "Eye Color: " + person.eyeColor + "\n";
   personInfo += "Occupation: " + person.occupation + "\n";
   alert(personInfo);
