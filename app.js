@@ -11,7 +11,7 @@ function app(people){
       searchByName(people);
       break;
     case 'no':
-      searchByTraits(people);
+      searchByTrait(people);
       break;
     default:
       alert("Invalid input. Please try again!");
