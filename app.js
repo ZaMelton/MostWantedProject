@@ -37,7 +37,7 @@ function mainMenu(person, people){
       displayPerson(person);
       break;
     case "family":
-      // TODO: get person's family
+      displayPeople(getFamily(people, person));
       break;
     case "descendants":
       displayPeople(seeDescendants(people, person));
@@ -126,9 +126,47 @@ function seeDescendants(people, person, allChildren = []){
     }
   });
   for(let i = 0; i < descendants.length; i++){
-    seeDescendants(people,descendants[i], allDescendants);
+    seeDescendants(people, descendants[i], allDescendants);
   }
   return allDescendants;
+}
+
+function getFamily(people, person){
+  var family = seeDescendants(people,person);
+  family = family.concat(getParents(people, person));
+  family = family.concat(getSpouse(people, person));
+  family = family.filter(function(el){
+    return el !== undefined;
+  });
+  return family;
+}
+
+function getParents(people, person){
+  var parentsAndGrandparents = [];
+  if(person.parents.length > 0){
+     var parents = people.filter(function(el){
+      if(el.id == person.parents[0] || el.id == person.parents[1]){
+        parentsAndGrandparents.push(el);
+        return el;
+      }
+    });
+
+    for(let i = 0; i < parents.length; i++){
+      parentsAndGrandparents = parentsAndGrandparents.concat(getParents(people, parents[i]));
+    }
+    return parentsAndGrandparents;
+  }
+}
+
+function getSpouse(people, person){
+  if(person.currentSpouse != null){
+    var spouse = people.filter(function(el){
+      if(el.currentSpouse == person.currentSpouse){
+        return el;
+      }
+    });
+    return spouse;
+  }
 }
 
 // alerts a list of people
