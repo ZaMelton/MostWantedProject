@@ -136,7 +136,7 @@ function getFamily(people, person){
   var printFamily = "";
   var family = seeDescendants(people,person);
   if(family.length > 0){
-    printFamily += "All children: \n";
+    printFamily += "All Children and Grandchildren: \n";
     for(let i = 0; i < family.length; i++){
       printFamily += family[i].firstName + " " + family[i].lastName + "\n";
     }
