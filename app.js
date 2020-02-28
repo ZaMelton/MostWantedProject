@@ -37,7 +37,7 @@ function mainMenu(person, people){
       displayPerson(person);
       break;
     case "family":
-      displayPeople(getFamily(people, person));
+      getFamily(people, person);
       break;
     case "descendants":
       displayPeople(seeDescendants(people, person));
@@ -132,13 +132,41 @@ function seeDescendants(people, person, allChildren = []){
 }
 
 function getFamily(people, person){
+
+  var printFamily = "";
   var family = seeDescendants(people,person);
-  family = family.concat(getParents(people, person));
-  family = family.concat(getSpouse(people, person));
-  family = family.filter(function(el){
-    return el !== undefined;
-  });
-  return family;
+  if(family.length > 0){
+    printFamily += "All children: \n";
+    for(let i = 0; i < family.length; i++){
+      printFamily += family[i].firstName + " " + family[i].lastName + "\n";
+    }
+  }
+
+  family = getParents(people, person);
+  if(typeof family != 'undefined'){
+    printFamily += "Parents and Grandparents: \n";
+    family = family.filter(function(el){
+      return el !== undefined;
+    });
+    for(let i = 0; i < family.length; i++){
+      printFamily += family[i].firstName + " " + family[i].lastName + "\n";
+    }
+  }
+
+  family = getSiblings(people, person)
+    if(typeof family != 'undefined'){
+      printFamily += "Siblings: \n";
+      for(let i = 0; i < family.length; i++){
+        printFamily += family[i].firstName + " " + family[i].lastName + "\n";
+      }
+    }
+
+  family = getSpouse(people, person);
+  if(typeof family != 'undefined'){
+    printFamily += "Spouse: \n";
+    printFamily += family[0].firstName + " " + family[0].lastName + "\n";
+  }
+  alert(printFamily);
 }
 
 function getParents(people, person){
@@ -158,10 +186,21 @@ function getParents(people, person){
   }
 }
 
+function getSiblings(people, person){
+  if(person.currentSpouse != null){
+    var siblings = people.filter(function(el){
+      if((el.parents[0] == person.parents[0] || el.parents[1] == person.parents[1]) && el.id != person.id){
+        return el;
+      }
+    });
+    return siblings;
+  }
+}
+
 function getSpouse(people, person){
   if(person.currentSpouse != null){
     var spouse = people.filter(function(el){
-      if(el.currentSpouse == person.currentSpouse){
+      if(el.id == person.currentSpouse){
         return el;
       }
     });
