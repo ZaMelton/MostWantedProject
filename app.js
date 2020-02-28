@@ -177,10 +177,10 @@ function getParents(people, person) {
   }
 }
 
-function getSiblings(people, person) {
-  if (person.currentSpouse != null) {
-    var siblings = people.filter(function (el) {
-      if ((el.parents[0] == person.parents[0] || el.parents[1] == person.parents[1]) && el.id != person.id) {
+function getSiblings(people, person){
+  if(person.parents.length > 0){
+    var siblings = people.filter(function(el){
+      if((el.parents[0] == person.parents[0] || el.parents[1] == person.parents[1]) && el.id != person.id){
         return el;
       }
     });
